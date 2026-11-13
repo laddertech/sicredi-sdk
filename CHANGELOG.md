@@ -1,6 +1,6 @@
 # Changelog
 
-## [0.1.0] - não publicada
+## [0.1.0] - 2026-11-13
 
 ### Adicionado
 - Cliente `Sicredi` com configuração explícita por instância (sem estado global).
