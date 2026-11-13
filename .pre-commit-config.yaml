@@ -1,0 +1,76 @@
+# Pre-commit hooks para sicredi-sdk
+# Instalação: pip install pre-commit && pre-commit install
+# Uso: pre-commit run --all-files (manual)
+#      ou roda automaticamente em cada commit
+
+repos:
+  # Ruff - Linter e formatter
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.12.4  # Atualizado para corresponder à versão local
+    hooks:
+      # Ruff linter - mesma verificação do GitHub Actions
+      - id: ruff
+        name: ruff check
+        args: [--fix]  # Corrige erros automaticamente quando possível
+        types_or: [python, pyi]
+
+      # Ruff formatter - mesma verificação do GitHub Actions
+      - id: ruff-format
+        name: ruff format
+        types_or: [python, pyi]
+
+  # Verificações básicas de arquivos
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.5.0
+    hooks:
+      # Remove espaços em branco no final das linhas
+      - id: trailing-whitespace
+        exclude: ^(.*\.md|.*\.txt)$
+
+      # Garante que arquivos terminam com newline
+      - id: end-of-file-fixer
+        exclude: ^(.*\.json|.*\.svg)$
+
+      # Verifica sintaxe YAML
+      - id: check-yaml
+        args: [--allow-multiple-documents]
+
+      # Verifica sintaxe TOML
+      - id: check-toml
+
+      # Detecta arquivos grandes (>500KB)
+      - id: check-added-large-files
+        args: [--maxkb=500]
+
+      # Detecta merge conflict markers
+      - id: check-merge-conflict
+
+      # Detecta chaves privadas commitadas acidentalmente
+      - id: detect-private-key
+
+      # Previne commits diretos na branch main/master
+      # Descomente a linha abaixo se trabalha sozinho e quer commitar direto em main
+      # - id: no-commit-to-branch
+      #   args: [--branch, main, --branch, master]
+
+  # Pytest - roda testes antes de commitar (opcional, pode ser lento)
+  # Descomente para ativar
+  # - repo: local
+  #   hooks:
+  #     - id: pytest
+  #       name: pytest
+  #       entry: uv run pytest
+  #       language: system
+  #       pass_filenames: false
+  #       always_run: true
+  #       args: [tests/, -v, --tb=short]
+
+# Configuração global
+default_language_version:
+  python: python3.10
+
+# Executa em todos os arquivos relevantes na primeira instalação
+default_stages: [pre-commit, pre-push]
+
+# Configurações de execução
+fail_fast: false  # Continua executando outros hooks mesmo se um falhar

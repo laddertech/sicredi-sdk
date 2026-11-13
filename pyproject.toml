@@ -1,0 +1,94 @@
+[build-system]
+requires = ["hatchling>=1.24"]
+build-backend = "hatchling.build"
+
+[project]
+name = "sicredi-sdk"
+version = "0.1.0"
+description = "SDK Python para as APIs do Sicredi (extrato e saldo de conta corrente)"
+readme = "README.md"
+requires-python = ">=3.10"
+authors = [
+    {name = "Fábio Thomaz", email = "fabio@ladder.dev.br"}
+]
+license = "MIT"
+keywords = ["sicredi", "banco", "api", "extrato", "saldo", "open finance"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "Natural Language :: Portuguese (Brazilian)",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Typing :: Typed",
+]
+dependencies = [
+    "requests>=2.31",
+    "requests-pkcs12>=1.25",
+    "cryptography>=42.0",
+]
+
+[project.urls]
+Homepage = "https://github.com/laddertech/sicredi-sdk"
+Repository = "https://github.com/laddertech/sicredi-sdk"
+Documentation = "https://developers.sicredi.com.br/public/docs/getting-started"
+
+[dependency-groups]
+dev = [
+    "pytest>=8.0",
+    "pytest-cov>=5.0",
+    "responses>=0.25",
+    "ruff>=0.12",
+    "build>=1.2",
+    "twine>=6.0",
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["sicredi"]
+
+[tool.hatch.build.targets.sdist]
+include = ["sicredi", "tests", "README.md", "CHANGELOG.md", "LICENSE"]
+
+[tool.ruff]
+line-length = 88
+target-version = "py310"
+
+[tool.ruff.lint]
+select = ["E", "W", "F", "I", "B", "C4", "UP", "S", "RUF"]
+ignore = [
+    "S101",   # assert nos testes
+    "S105",   # falsos positivos de "senha" em nomes de campo
+    "S106",
+    "RUF001", # caracteres ambíguos em textos em português
+    "RUF002",
+    "RUF003",
+]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**" = ["S107", "RUF012"]
+
+[tool.ruff.lint.isort]
+known-first-party = ["sicredi"]
+
+[tool.ruff.format]
+quote-style = "single"
+
+[tool.coverage.run]
+source = ["sicredi"]
+branch = true
+
+[tool.coverage.report]
+show_missing = true
+fail_under = 90
+exclude_lines = [
+    "pragma: no cover",
+    "if TYPE_CHECKING:",
+    "class .*\\bProtocol\\):",
+    "\\.\\.\\.",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = ["--strict-markers", "--strict-config"]
